@@ -69,6 +69,10 @@ RUN pip install pyepics
 # copy test epics IOC database
 ADD testioc.db /
 
+# add latest taurus library 
+RUN apt-get install python-pip -y
+RUN pip install git+https://github.com/taurus-org/taurus.git@develop
+
 # add USER ENV (necessary for spyderlib in taurus.qt.qtgui.editor)
 ENV USER=root
 
