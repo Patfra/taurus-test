@@ -32,14 +32,7 @@ Then you can log into the container with:
 docker exec -it taurus-test-2 bash
 ~~~~
 
-Note: **this image does not contain a Tango DB and TangoTest DS**, because it is configured to run with Databases in different containers. However, you can run Tango DB and TangoTest DS using those commends:
-
-
-~~~~
-apt-get install -y mysql-server
-apt-get install -y tango-db
-apt-get install -y tango-test
-~~~~
+Note: **this image does not contain a Tango DB and TangoTest DS**, because it is configured to run with Databases in different containers.
 
 Thanks to [reszelaz](https://github.com/reszelaz) for providing the first version of this docker image
 and to [cpascual](https://github.com/cpascual) for developing it.
