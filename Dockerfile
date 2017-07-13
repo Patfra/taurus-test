@@ -1,4 +1,4 @@
-FROM debian:stable
+FROM debian:8
 
 # add EPICS repo and repo-key
 ADD http://epics.nsls2.bnl.gov/debian/repo-key.pub repo-key.pub
@@ -23,23 +23,15 @@ ENV DEBIAN_FRONTEND noninteractive
 # the database will be fead from file, instead of creating tables
 # RUN echo "exit 0" > /usr/sbin/policy-rc.d
 
-# install mysql server
-RUN apt-get install -y mysql-server
-
-#install tango-db
-RUN apt-get install -y tango-db
-
-#install tango-test DS
-RUN apt-get install -y tango-test
-
-# install sardana dependencies
+# install sardana dependencies python-nxs
 RUN apt-get install -y python ipython python-h5py python-lxml python-numpy\ 
                        python-nxs python-ply python-pytango python-qt4\ 
                        python-qwt5-qt4 python-guiqwt pymca
 
 # install pip
-RUN apt-get install -y python-pip
-
+RUN apt-get install wget -y
+RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN python get-pip.py
 # install spyder V3 from pypi
 RUN pip install spyder==3
 
@@ -51,11 +43,6 @@ ENV DISPLAY=:1.0
 
 # configure supervisord
 COPY supervisord.conf /etc/supervisor/conf.d/
-
-# TODO: use just basic database, not the one with sardemo
-# copy & untar mysql tango database (with sardemo) and change owner to mysql user
-ADD tangodbsardemo.tar /var/lib/mysql/
-RUN chown -R mysql /var/lib/mysql/tango
 
 # define tango host env var
 ENV TANGO_HOST=taurus-test:10000
@@ -69,9 +56,12 @@ RUN pip install pyepics
 # copy test epics IOC database
 ADD testioc.db /
 
-# add latest taurus library 
+# add latest taurus  
 RUN apt-get install python-pip -y
-RUN pip install git+https://github.com/taurus-org/taurus.git@develop
+RUN pip install -U taurus
+
+# add latest taurus  
+RUN apt-get install x11-xserver-utils -y
 
 # add USER ENV (necessary for spyderlib in taurus.qt.qtgui.editor)
 ENV USER=root
